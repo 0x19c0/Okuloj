@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family:Courier;
+      color: #168C00;
+      background: #000000;
+    }
+
+    h2 {
+      padding: 10px;
+      align: left;
+    }
+
+    input {
+      background-color:#000000;
+      color:inherit;
+      font-family:inherit;
+      font-size:inherit;
+      border:0;
+			outline: none;
+			width: 70%;
+    }
+
+    button {
+      background-color:#000000;
+      color:inherit;
+      font-family:inherit;
+      font-size:inherit;
+      border:0;
+    }
+
+    .row {
+        display: table;
+        width: 100%;
+        min-height:100%;
+    }
+
+    .column {
+      display: table-cell;
+      height: 100%;
+      width: 50%;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>
+ > Okuloj Project<br>
+ > Enter the Okuloj ID:<br>
+ > <input type="text" spellcheck="false">
+</h2>
+
+<div class="row" height=100%>
+<div class="column">
+<b> > Function: recent_devices()</b><br>
+ <br>
+ > ESP name (optional):<br>
+ > <input type="text" id="recentName1" spellcheck="false" onkeypress=""><br>
+ > Additional ESP name (optional):<br>
+ > <input type="text" id="recentName2" spellcheck="false" onkeypress=""><br>
+ > Specify start time (dd-mm-yyyy_hh:mm):<br>
+ > <input type="text" id="recentStart" spellcheck="false" onkeypress=""><br>
+ > Specify end time (dd-mm-yyyy_hh:mm):<br>
+ > <input type="text" id="recentEnd" spellcheck="false" onkeypress=""><br>
+ > Press Enter to request:<br>
+ > <input type="text" spellcheck="false" onkeypress="if (event.keyCode == 13) Recent()"><br>
+ <div id="vidanteText"></div><br>
+</div>
+
+<div class="column">
+<b> > Function: find_device()</b><br>
+ <br>
+ > Specify start time (optional):<br>
+ > <input type="text" id="searchStart" spellcheck="false" onkeypress=""><br>
+ > Specify end time (optional):<br>
+ > <input type="text" id="searchEnd" spellcheck="false" onkeypress=""><br>
+ > Specify device and press Enter to request:<br>
+ > <input type="text" id="macFind" onkeypress="if (event.keyCode == 13) Find()"><br>
+ <div id="okulojText"></div><br>
+</div>
+
+</div>
+
+<script>
+var addrBase = 'https://script.google.com/macros/s/INSERTYOURSCRIPTID/exec?'
+
+function Recent() {
+  var obj = document.getElementById("vidanteText");
+  obj.innerHTML = " > Wait for Okuloj response...<br>";
+
+  var addr = addrBase + 'func=recent';
+
+  var start = document.getElementById("recentStart").value;
+  if (start != "") {
+    startTime = convertDateToTimestamp(start);
+    addr += "&start=" + startTime.toString();
+  }
+
+  var end = document.getElementById("recentEnd").value;
+  if (end != "") {
+    endTime = convertDateToTimestamp(end);
+    addr += "&end=" + endTime.toString();
+  }
+
+  var esp1 = document.getElementById("recentName1").value;
+  if (esp1 != "") {
+    addr += "&esp1=" + esp1;
+  }
+
+  var esp2 = document.getElementById("recentName2").value;
+  if (esp2 != "") {
+    addr += "&esp2=" + esp2;
+  }
+
+  fetch(addr)
+  .then(function(response) {
+    if (response.status !== 200) {
+    obj.innerHTML = "request status not ok";
+    return;
+  }
+  response.text().then(function (text) {
+    obj.innerHTML = text;
+  });
+  }
+  )
+  .catch(function(err) {
+  obj.innerHTML = "request error";
+  });
+}
+
+function Find() {
+  var obj = document.getElementById("okulojText");
+  obj.innerHTML = " > Wait for Okuloj response...<br> > <br>";
+  var num = document.getElementById("macFind").value;
+  var addr = addrBase + 'func=search&mac=' + num;
+
+  var start = document.getElementById("searchStart").value;
+  if (start != "") {
+    startTime = convertDateToTimestamp(start);
+    addr += "&start=" + startTime.toString();
+  }
+
+  var end = document.getElementById("searchEnd").value;
+  if (end != "") {
+    endTime = convertDateToTimestamp(end);
+    addr += "&end=" + endTime.toString();
+  }
+
+  fetch(addr)
+  .then(function(response) {
+    if (response.status !== 200) {
+    obj.innerHTML = "request status not ok";
+    return;
+  }
+  response.text().then(function (text) {
+    obj.innerHTML = text;
+  });
+  }
+  )
+  .catch(function(err) {
+  obj.innerHTML = "request error";
+  });
+
+  setTimeout(Okuloj, 30000);
+}
+
+function convertDateToTimestamp(my_date){
+  var dateTimeParts = my_date.split('_'),
+      timeParts = dateTimeParts[1].split(':'),
+      dateParts = dateTimeParts[0].split('-'),
+      timestamp;
+  timestamp = new Date(dateParts[2], parseInt(dateParts[1], 10) - 1, dateParts[0], timeParts[0], timeParts[1]);
+
+  var n= timestamp.getTime();
+  n = Math.floor(n/1000);
+  return n;
+}
+
+</script>
+</body>
+</html>
