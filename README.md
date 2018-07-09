@@ -22,6 +22,8 @@ The system consists of the following elements:
   * Google App processing requests by ESP and frontend. ESP requests are appends to the Sheet, frontend requests are answered with filtered Sheet data (by timestamp, ESP name, MAC etc.).
   * Frontend is a webpage that translates human-readable requests to GET requests, sends them to the App and shows the response once received. Mind that the terminal-like look is purely cosmetic.
 
+<p align="center"><img src="https://raw.githubusercontent.com/0x19c0/Okuloj/master/frontend.png"></p>
+
 ## Dependencies
 
 The process of building ESP8266 Arduino project is well described here:  
