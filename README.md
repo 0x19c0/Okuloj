@@ -26,18 +26,20 @@ The system consists of the following elements:
 
 ## Dependencies
 
-The process of building ESP8266 Arduino project is well described here:  
+Follow this guide to set the Arduino IDE and get the necessary ESP libraries:  
 https://github.com/spacehuhn/esp8266_deauther/wiki/Installation#compiling-using-arduino-ide
 
-This library is necessary for uploading the logs via Google Script:  
+This additional library is necessary for uploading the logs via Google Script:  
 https://github.com/electronicsguy/ESP8266/tree/master/HTTPSRedirect
 
 ## User Guide
 
+After you're done with the dependencies, proceed with the following:
   * On your Google Drive, create a new Google Sheet.
   * Use Tools/Script editor, paste the okuloj.js file there. On the second line of this file you have to add the Sheet ID - copy it from URL of the Sheet (the part after /d/).
   * Publish/Deploy as web app. Give the access to the app to "Anyone, even anonymous". You will get the app URL - copy the Script ID.
   * Open okuloj.ino file and edit the following variables: kChannel (choose the channel used by a target WiFi), kSSID/kPassword (you need some access to the internet for uploading the data, for open networks leave the kPassword empty), kScriptID and kDeviceName (to distinguish between uploads of different ESPs if you've got multiple). Don't change other parameters if you don't have a clear idea what you're doing.
+  * Make sure you have HTTPSRedirect library installed (you can just add it to the project folder).
   * Compile and upload the program to the ESP. Deploy it at the target location.
   * In the index.html file, paste the Script ID into addrBase variable. Open the file using whatever browser.  
 
